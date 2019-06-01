@@ -7,12 +7,6 @@ from parse import ParseWeather
 
 # import logging
 
-# TODO
-# hiroku
-# del logging
-# del hello
-
-
 class WeatherTelegramBot:
     def __init__(self, api_key):
         # logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)

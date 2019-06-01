@@ -1,13 +1,19 @@
 import psycopg2
 from datetime import datetime, timedelta
+import os
 
 
 class Storage:
     def __init__(self):
-        self.conn = psycopg2.connect(dbname='weather',
-                                     user='postgres',
-                                     password='bobjonson',
-                                     host='127.0.0.1')
+        # self.conn = psycopg2.connect(dbname='weather',
+        #                              user='postgres',
+        #                              password='your db pass',
+        #                              host='127.0.0.1')    # use for localhost
+
+        #  this one for heroku
+        self.DATABASE_URL = os.environ['DATABASE_URL']
+        self.conn = psycopg2.connect(self.DATABASE_URL, sslmode='require')
+
         cursor = self.conn.cursor()
         cursor.execute("CREATE TABLE IF NOT EXISTS weather (id smallint, comment varchar(150),"
                        " temperature smallint , dateRow timestamp, rain boolean, city varchar(30));")
