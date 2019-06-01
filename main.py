@@ -1,6 +1,7 @@
 from telegram.ext import Updater, CommandHandler
 import threading
 from datetime import datetime
+from pytz import timezone
 
 from db import Storage
 from parse import ParseWeather
@@ -12,7 +13,7 @@ class WeatherTelegramBot:
     def __init__(self, api_key):
         # logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
         # logger = logging.getLogger(__name__)
-
+        self.datetime_now = datetime.now(timezone('Europe/Kiev'))
         self.dict_of_available_cities = {
             "Vinnitsa": "Винница",
             "Dnipropetrovsk": "Днепропетровск",
@@ -83,7 +84,7 @@ class WeatherTelegramBot:
     def scan_db(self, bot):
         user_list = self.storage.user_notification_scan()
         if len(user_list) != 0:
-            hour_now = datetime.now().hour
+            hour_now = self.datetime_now.hour
             if 24 - hour_now > 12:
                 hours_limit = 24 - hour_now
             else:
@@ -100,7 +101,7 @@ class WeatherTelegramBot:
         threading.Timer(360.0, self.parse_all_cities_where_users_live).start()
 
     def rain_notification(self, bot):
-        minutes_now = int(datetime.now().strftime("%M"))
+        minutes_now = int(self.datetime_now.strftime("%M"))
         if 50 <= minutes_now <= 59:
             result = self.storage.rain_search()
             if result:
