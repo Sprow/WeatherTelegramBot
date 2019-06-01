@@ -188,10 +188,13 @@ class WeatherTelegramBot:
     def wait(self):
         self.updater.idle()
 
-if __name__ == '__main__':
-    try:
-        # bot = WeatherTelegramBot('your api key')
-        bot = WeatherTelegramBot('886635819:AAHxeR4XaURy33uPnCgGfWGoPUeaApqShO8')
-        bot.wait()
-    except KeyboardInterrupt:
-        exit()
+bot = WeatherTelegramBot('886635819:AAHxeR4XaURy33uPnCgGfWGoPUeaApqShO8')
+bot.wait()
+
+# if __name__ == '__main__':
+#     try:
+#         # bot = WeatherTelegramBot('your api key')
+#         bot = WeatherTelegramBot('886635819:AAHxeR4XaURy33uPnCgGfWGoPUeaApqShO8')
+#         bot.wait()
+#     except KeyboardInterrupt:
+#         exit()
