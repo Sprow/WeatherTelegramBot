@@ -7,6 +7,7 @@ from parse import ParseWeather
 
 # import logging
 
+
 class WeatherTelegramBot:
     def __init__(self, api_key):
         # logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -188,7 +189,8 @@ class WeatherTelegramBot:
 
 if __name__ == '__main__':
     try:
-        bot = WeatherTelegramBot('your api key')
+        # bot = WeatherTelegramBot('your api key')
+        bot = WeatherTelegramBot('886635819:AAHxeR4XaURy33uPnCgGfWGoPUeaApqShO8')
         bot.wait()
     except KeyboardInterrupt:
         exit()
