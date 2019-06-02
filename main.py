@@ -8,12 +8,14 @@ from parse import ParseWeather
 
 # import logging
 
+# TODO
+# поменять время в парсинге
+
 
 class WeatherTelegramBot:
     def __init__(self, api_key):
         # logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
         # logger = logging.getLogger(__name__)
-        self.datetime_now = datetime.now(timezone('Europe/Kiev'))
         self.dict_of_available_cities = {
             "Vinnitsa": "Винница",
             "Dnipropetrovsk": "Днепропетровск",
@@ -84,7 +86,7 @@ class WeatherTelegramBot:
     def scan_db(self, bot):
         user_list = self.storage.user_notification_scan()
         if len(user_list) != 0:
-            hour_now = self.datetime_now.hour
+            hour_now = datetime.now(timezone('Europe/Kiev')).hour
             if 24 - hour_now > 12:
                 hours_limit = 24 - hour_now
             else:
@@ -101,13 +103,11 @@ class WeatherTelegramBot:
         threading.Timer(360.0, self.parse_all_cities_where_users_live).start()
 
     def rain_notification(self, bot):
-        minutes_now = int(self.datetime_now.strftime("%M"))
+        minutes_now = int(datetime.now(timezone('Europe/Kiev')).strftime("%M"))
         if 50 <= minutes_now <= 59:
             result = self.storage.rain_search()
             if result:
                 users, dict_of_messages = result[0], result[1]
-                # print(users, '\n')
-                # print(dict_of_messages)
                 for user in users:
                     bot.send_message(chat_id=user[0], text=dict_of_messages[user[1]])
         threading.Timer(120.0, lambda: self.rain_notification(self.updater.bot)).start()

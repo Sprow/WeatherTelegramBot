@@ -1,12 +1,12 @@
 import psycopg2
 from datetime import datetime, timedelta
 import os
+
 from pytz import timezone
 
 
 class Storage:
     def __init__(self):
-        self.datetime_now = datetime.now(timezone('Europe/Kiev'))
         # self.conn = psycopg2.connect(dbname='weather',
         #                              user='postgres',
         #                              password='your db pass',
@@ -35,10 +35,10 @@ class Storage:
                     rain = False
 
                 if i < 24:
-                    today = self.datetime_now
+                    today = datetime.now(timezone('Europe/Kiev'))
                     date = str(today.replace(hour=i, minute=0, second=0, microsecond=0))
                 else:
-                    tomorrow = self.datetime_now + timedelta(1)
+                    tomorrow = datetime.now(timezone('Europe/Kiev')) + timedelta(1)
                     date = str(tomorrow.replace(hour=i-24, minute=0, second=0, microsecond=0))
 
                 cursor.execute("UPDATE weather SET comment=%s, temperature=%s, daterow=%s, rain=%s "
@@ -51,10 +51,10 @@ class Storage:
                 else:
                     rain = False
                 if i < 24:
-                    today = self.datetime_now
+                    today = datetime.now(timezone('Europe/Kiev'))
                     date = str(today.replace(hour=i, minute=0, second=0, microsecond=0))
                 else:
-                    tomorrow = self.datetime_now + timedelta(1)
+                    tomorrow = datetime.now(timezone('Europe/Kiev')) + timedelta(1)
                     date = str(tomorrow.replace(hour=i - 24, minute=0, second=0, microsecond=0))
 
                 cursor.execute("INSERT INTO weather VALUES (%s, %s, %s, %s, %s, %s)",
@@ -65,7 +65,7 @@ class Storage:
 
     def weather_for_x_hours(self, hours_limit, user_id):
         cursor = self.conn.cursor()
-        time = self.datetime_now - timedelta(hours=1)
+        time = datetime.now(timezone('Europe/Kiev')) - timedelta(hours=1)
 
         cursor.execute("SELECT city FROM user_list WHERE user_id=%s", (user_id,))
         city = cursor.fetchone()[0]
@@ -77,7 +77,7 @@ class Storage:
         cursor.execute("SELECT dateRow, temperature, comment, rain FROM weather "
                        "WHERE dateRow >= %s AND city=%s LIMIT %s", (time, city, hours_limit))
         records = cursor.fetchall()
-        date = self.datetime_now.strftime("%m/%d/%Y, %H:%M")
+        date = datetime.now(timezone('Europe/Kiev')).strftime("%m/%d/%Y, %H:%M")
         weather_str = 'Дата: ' + date + '\n'
         for i in records:
             time = i[0].strftime("%H:%M")
@@ -98,7 +98,7 @@ class Storage:
 
     def rain_for_x_hours(self, hours_limit, user_id):
         cursor = self.conn.cursor()
-        time = self.datetime_now - timedelta(hours=1)
+        time = datetime.now(timezone('Europe/Kiev')) - timedelta(hours=1)
         time_plus_x_hours = time + timedelta(hours=hours_limit)
 
         cursor.execute("SELECT city FROM user_list WHERE user_id=%s", (user_id,))
@@ -111,7 +111,7 @@ class Storage:
         cursor.execute("SELECT dateRow, temperature, comment FROM weather WHERE "
                        "rain = TRUE AND city=%s AND dateRow BETWEEN %s AND %s;", (city, time, time_plus_x_hours))
         records = cursor.fetchall()
-        date = self.datetime_now.strftime("%m/%d/%Y, %H:%M")
+        date = datetime.now(timezone('Europe/Kiev')).strftime("%m/%d/%Y, %H:%M")
         rain_str = 'Дата: ' + date + '\n'
         if records:
             for i in records:
@@ -137,7 +137,7 @@ class Storage:
         self.conn.commit()
 
     def change_weather_posting_time(self, user_id, time):
-        datetime_now = self.datetime_now
+        datetime_now = datetime.now(timezone('Europe/Kiev'))
         time_now = datetime_now.hour*100+datetime_now.minute
         cursor = self.conn.cursor()
         cursor.execute("UPDATE user_list SET notification_time=%s WHERE user_id=%s", (time, user_id))
@@ -162,7 +162,7 @@ class Storage:
         return False
 
     def user_notification_scan(self):
-        dn = self.datetime_now
+        dn = datetime.now(timezone('Europe/Kiev'))
         one_day_ago = dn - timedelta(days=1)
         time_now = dn.hour*100+dn.minute
         cursor = self.conn.cursor()
@@ -190,7 +190,7 @@ class Storage:
 
     def rain_search(self):
         cursor = self.conn.cursor()
-        dn = self.datetime_now
+        dn = datetime.now(timezone('Europe/Kiev'))
         min_time = dn - timedelta(minutes=5, hours=1)
         max_time = dn + timedelta(minutes=5) - timedelta(hours=1)
         min_time2 = dn - timedelta(minutes=5)
@@ -219,7 +219,7 @@ class Storage:
                 message = 'Скоро дождь \n'
                 n = 1
                 if rain:
-                    hours_from_now = self.datetime_now + timedelta(hours=n)
+                    hours_from_now = datetime.now(timezone('Europe/Kiev')) + timedelta(hours=n)
                     cursor.execute("SELECT dateRow, temperature, comment, id, rain FROM weather "
                                    "WHERE dateRow > %s LIMIT 2", (hours_from_now,))
                     records = cursor.fetchall()
