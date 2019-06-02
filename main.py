@@ -8,9 +8,6 @@ from parse import ParseWeather
 
 # import logging
 
-# TODO
-# поменять время в парсинге
-
 
 class WeatherTelegramBot:
     def __init__(self, api_key):
@@ -188,13 +185,10 @@ class WeatherTelegramBot:
     def wait(self):
         self.updater.idle()
 
-# bot = WeatherTelegramBot('886635819:AAHxeR4XaURy33uPnCgGfWGoPUeaApqShO8')
-# bot.wait()
 
 if __name__ == '__main__':
     try:
-        # bot = WeatherTelegramBot('your api key')
-        bot = WeatherTelegramBot('886635819:AAHxeR4XaURy33uPnCgGfWGoPUeaApqShO8')
+        bot = WeatherTelegramBot('your api key')
         bot.wait()
     except KeyboardInterrupt:
         exit()
