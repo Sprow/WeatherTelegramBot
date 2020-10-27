@@ -4,7 +4,7 @@ beautifulsoup4==4.7.1
 certifi==2019.3.9
 cffi==1.12.3
 chardet==3.0.4
-cryptography==2.6.1
+cryptography==3.2
 Django==1.11
 djangorestframework==3.6.2
 drfdocs==0.0.11
